@@ -33,7 +33,5 @@ def hitDetected(row):
     # TODO: Implement this
     return True
 
-print("Hello, I'm the parser")
-
 csvReaderObj = open_csv_file(filename)
 parse_csv_file(csvReaderObj)

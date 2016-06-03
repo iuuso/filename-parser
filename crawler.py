@@ -2,6 +2,10 @@
 
 import os
 from tinydb import TinyDB
+from tinydb import Query
+from tinydb import where
+
+dbName = "db/db.json"
 
 # A script for crawling javascript-files
 # from the repository.
@@ -56,6 +60,14 @@ def strip_type(jsFiles):
 	return stripped
 
 def main():
+    # Check whether the database exists
+    # If not, let's create one.
+    db = TinyDB(dbName)
+    #if not os.path.isfile(dbName):
+    #    open(dbName, 'a').close()
+    table = db.table('Filenames')
+
+
     jsFiles = collect_js_files("./")
 
     # Slice .js and .min. endings from filenames
@@ -65,9 +77,22 @@ def main():
     duplicatesRemoved = remove_duplicates(strippedJSFiles)
 
     print("{} files in total left.".format(len(duplicatesRemoved)))
-    # Insert filenames to database
-    db = TinyDB('db/db.json')
-    db.insert({'int': 1, 'char': 'a'})
 
-# TODO: Insert sys.argvs for specifying the folder to crawl
+    '''
+    Filenames are now gathered, its time to add them to the database
+    '''
+
+    #table.insert_multiple({'name': duplicatesRemoved[i]} for i in range(len(duplicatesRemoved)))
+    File = Query()
+    for i in duplicatesRemoved:
+        print(i)
+        if db.search(where('name') == i):
+            ''' Entry found, doing nothing'''
+            pass
+        else:
+            table.insert({'name': i})
+    print(table.all())
+
+# TODO: Clean this mess up, its ugly (meaning that the code is quite spaghettilike).
+# TODO: to settings.py file: dbname, crawling folder, etc.
 main()
