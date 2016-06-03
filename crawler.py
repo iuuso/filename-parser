@@ -1,4 +1,7 @@
+#/usr/bin python3
+
 import os
+from tinydb import TinyDB
 
 # A script for crawling javascript-files
 # from the repository.
@@ -53,14 +56,18 @@ def strip_type(jsFiles):
 	return stripped
 
 def main():
-	jsFiles = collect_js_files("./")
+    jsFiles = collect_js_files("./")
 
-	# Slice .js and .min. endings from filenames
-	strippedJSFiles = strip_type(jsFiles)
+    # Slice .js and .min. endings from filenames
+    strippedJSFiles = strip_type(jsFiles)
 
-	# Remove duplicates
-	duplicatesRemoved = remove_duplicates(strippedJSFiles)
+    # Remove duplicates
+    duplicatesRemoved = remove_duplicates(strippedJSFiles)
 
-	print("{} files in total left.".format(len(duplicatesRemoved)))
+    print("{} files in total left.".format(len(duplicatesRemoved)))
+    # Insert filenames to database
+    db = TinyDB('db/db.json')
+    db.insert({'int': 1, 'char': 'a'})
 
+# TODO: Insert sys.argvs for specifying the folder to crawl
 main()
